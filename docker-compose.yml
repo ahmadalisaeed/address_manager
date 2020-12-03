@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+    db:
+        image: "postgres"
+        ports:
+            - "5432:5432"
+        volumes:
+            - ../addresses_db:/var/lib/postgresql/data
+        environment:
+            POSTGRES_DB: addresses_manager
+            POSTGRES_USER: postgres_user
+            POSTGRES_PASSWORD: postgres_user
+    app:
+        build: .
+        ports:
+            - "8080:8080"
+        environment:
+            SPRING_DATASOURCE_URL: jdbc:postgresql://db/addresses_manager
+            SPRING_DATASOURCE_USERNAME: postgres_user
+            SPRING_DATASOURCE_PASSWORD: postgres_user
+        restart: on-failure
+        depends_on:
+            - db
+    
